@@ -3,11 +3,14 @@
 let number1 = '';
 let number2 = '';
 let operator = '';
+let dotDecimal = '';
 let result = '';
 const numberButtons = document.querySelectorAll(".number");
 const allClear = document.getElementById('all-clear');
 const operand = document.querySelectorAll('.operator')
 const equals = document.getElementById('equals');
+const dot = document.getElementById('dot');
+const delButton = document.getElementById('delete');
 
 // functions declarations
 
@@ -25,9 +28,10 @@ const mult = function (a, b) {
 
 const div = function (a, b) {
     if (b === 0) {
-        throw new Error('Division by zero')
+        return 'Err';
     }
     return a / b;
+
 }
 
 // Create the operation function
@@ -67,12 +71,26 @@ function updateScreen(event) {
     updateDisplay();
 }
 
+// Section to add dot to the numbers
+
+dot.addEventListener('click', addDot);
+
+function addDot(e) {
+    // check if dot it´s allready include on the present number
+    if (!number1.includes('.')) {
+        number1 += '.';
+    } else if (operator && !number2.includes('.')) {
+        number2 += '.';
+    }
+    updateDisplay();
+}
+
 // Section to add de operator to the ecuation
 operand.forEach(button => {
-    button.addEventListener('click', showOperand);
+    button.addEventListener('click', addOperand);
 })
 
-function showOperand(e) {
+function addOperand(e) {
     operator = e.target.innerText;
     updateDisplay();
 }
@@ -85,6 +103,28 @@ function getResult() {
     let result = operation(parseFloat(number1), operator, parseFloat(number2));
     const currentOperandDisplay = document.querySelector('.current-operand');
     currentOperandDisplay.innerText = result;
+
+    if (result !== '') {
+        number1 = result;
+        operator = '';
+        number2 = '';
+        updateDisplay();
+    }
+}
+
+// Section to delet one digit with DEL button
+
+delButton.addEventListener('click', delDigit);
+
+function delDigit() {
+    if (operator === '') {
+        number1 = number1.slice(0, -1);
+    } else if (number2 === '') {
+        operator = '';
+    } else {
+        number2 = number2.slice(0, -1)
+    }
+    updateDisplay();
 }
 
 // Section to clear the screen display
@@ -95,6 +135,7 @@ function clearScreen() {
     number2 = '';
     operator = '';
     result = '';
+    dotDecimal = '';
 
     const previousOperandDisplay = document.querySelector('.previous-operand');
     const currentOperandDisplay = document.querySelector('.current-operand');
