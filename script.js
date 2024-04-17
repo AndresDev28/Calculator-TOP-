@@ -102,10 +102,12 @@ equals.addEventListener('click', getResult);
 function getResult() {
     let result = operation(parseFloat(number1), operator, parseFloat(number2));
     const currentOperandDisplay = document.querySelector('.current-operand');
-    currentOperandDisplay.innerText = result;
+    //Rounded result
+    let roundedResult = parseFloat(result.toFixed(3))
+    currentOperandDisplay.innerText = roundedResult;
 
     if (result !== '') {
-        number1 = result;
+        number1 = roundedResult;
         operator = '';
         number2 = '';
         updateDisplay();
